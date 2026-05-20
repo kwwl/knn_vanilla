@@ -8,9 +8,9 @@ class KNN:
         self.X_train = []
         self.y_train = []
 
-    def fit(self, X, y) -> None:
-        self.X_train = [list(row) for row in X]
-        self.y_train = list(y)
+    def fit(self, X, y):
+        self.X_train = X
+        self.y_train = y
 
     def euclidean_distance(self, point_a, point_b):
         total = 0
@@ -25,21 +25,22 @@ class KNN:
         predictions = []
 
         for point in X:
-            distances = []
+            all_distances = []
+            all_labels = []
 
-            for index in range(len(self.X_train)):
-                distance = self.euclidean_distance(point, self.X_train[index])
-                distances.append((distance, self.y_train[index]))
+            for train_index in range(len(self.X_train)):
+                distance = self.euclidean_distance(point, self.X_train[train_index])
+                all_distances.append(distance)
+                all_labels.append(self.y_train[train_index])
 
-            distances.sort(key=lambda element: element[0])
+            sorted_indices = sorted(range(len(all_distances)), key=lambda position: all_distances[position])
+            k_nearest_indices = sorted_indices[: self.k]
 
-            k_nearest = distances[:self.k]
+            k_nearest_labels = []
+            for index in k_nearest_indices:
+                k_nearest_labels.append(all_labels[index])
 
-            labels = []
-            for element in k_nearest:
-                labels.append(element[1])
-
-            most_common = Counter(labels).most_common(1)[0][0]
+            most_common = Counter(k_nearest_labels).most_common(1)[0][0]
             predictions.append(most_common)
 
         return predictions
