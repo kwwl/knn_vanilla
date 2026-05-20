@@ -25,15 +25,19 @@ class KNN:
         predictions = []
 
         for point in X:
+            point = list(point)
             all_distances = []
             all_labels = []
 
             for train_index in range(len(self.X_train)):
-                distance = self.euclidean_distance(point, self.X_train[train_index])
+                train_point = list(self.X_train[train_index])
+                distance = self.euclidean_distance(point, train_point)
                 all_distances.append(distance)
                 all_labels.append(self.y_train[train_index])
 
-            sorted_indices = sorted(range(len(all_distances)), key=lambda position: all_distances[position])
+            sorted_indices = sorted(
+                range(len(all_distances)), key=lambda position: all_distances[position]
+            )
             k_nearest_indices = sorted_indices[: self.k]
 
             k_nearest_labels = []
@@ -47,10 +51,12 @@ class KNN:
 
     def evaluate(self, X, y):
         predictions = self.predict(X)
+        true_labels = list(y)
         correct = 0
 
         for index in range(len(predictions)):
-            if predictions[index] == y[index]:
+            if predictions[index] == true_labels[index]:
+
                 correct = correct + 1
 
         accuracy = correct / len(predictions)
