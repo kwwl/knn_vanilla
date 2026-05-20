@@ -43,3 +43,15 @@ class KNN:
             predictions.append(most_common)
 
         return predictions
+
+    def evaluate(self, X, y):
+        predictions = self.predict(X)
+        correct = 0
+
+        for index in range(len(predictions)):
+            if predictions[index] == y[index]:
+                correct = correct + 1
+
+        accuracy = correct / len(predictions)
+
+        return accuracy
